@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Elsa" Version="2.7.0" />
+    <PackageReference Include="Elsa.Activities.Email" Version="2.7.0" />
+    <PackageReference Include="Elsa.Activities.Http" Version="2.7.0" />
+    <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.7.0" />
+    <PackageReference Include="Elsa.Designer.Components.Web" Version="2.7.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" Version="2.7.0" />
+    <PackageReference Include="Elsa.Server.Api" Version="2.7.0" />
+    <PackageReference Include="Elsa.WorkflowTesting.Api" Version="2.7.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.44.0" />
+    <PackageReference Include="Microsoft.PowerBI.Api" Version="4.6.0" />
+  </ItemGroup>
+
+</Project>
