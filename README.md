@@ -14,7 +14,7 @@ docker run --rm -it -p 3000:80 -p 2525:25 rnwood/smtp4dev
 To test Power BI export file navigate to `/powerbi`
 
 <p align="center">
-  <img src="./doc/power-bi-paginated-report-export.png" alt="Exporting power bi paginated report">
+  <img src="./docs/power-bi-paginated-report-export.png" alt="Exporting power bi paginated report">
 </p>
 
 ## Sample Workflow
