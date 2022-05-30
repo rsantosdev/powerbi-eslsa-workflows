@@ -1,0 +1,288 @@
+{
+  "$id": "1",
+  "definitionId": "08e55b55176c474580f4cbb9f9724158",
+  "versionId": "abfddc9c3dfa4e15b8a468c185925939",
+  "name": "TopPcPayReport",
+  "displayName": "Get last 7 days of pc pay data from power bi",
+  "version": 11,
+  "variables": {
+    "$id": "2",
+    "data": {}
+  },
+  "customAttributes": {
+    "$id": "3",
+    "data": {}
+  },
+  "isSingleton": false,
+  "persistenceBehavior": "WorkflowBurst",
+  "deleteCompletedInstances": false,
+  "isPublished": true,
+  "isLatest": true,
+  "activities": [
+    {
+      "$id": "4",
+      "activityId": "bd5ea226-ea12-419c-bfa9-d5ea6cbb419d",
+      "type": "SendHttpRequest",
+      "name": "TopPcPayReportRequest",
+      "displayName": "Get Report file",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "5",
+          "name": "Url",
+          "expressions": {
+            "$id": "6",
+            "Literal": "http://localhost:5204/powerbi/export-api"
+          }
+        },
+        {
+          "$id": "7",
+          "name": "Method",
+          "expressions": {
+            "$id": "8",
+            "Literal": "POST"
+          }
+        },
+        {
+          "$id": "9",
+          "name": "Content",
+          "syntax": "Liquid",
+          "expressions": {
+            "$id": "10",
+            "Literal": "{\n    \"reportId\": \"your-reportid-here\",\n    \"reportParameters\": {\n        \"TopN\": \"20\",\n        \"UseDateFilter\": \"true\",\n        \"StartDate\": \"2022-04-27\",\n        \"EndDate\": \"2022-05-27\"\n    }\n}",
+            "JavaScript": "",
+            "Liquid": "{\r\n    \"reportId\": \"your-reportid-here\",\r\n    \"reportParameters\": {\r\n        \"TopN\": \"20\",\r\n        \"UseDateFilter\": \"true\",\r\n        \"StartDate\": \"{{Variables.last7Days}}\",\r\n        \"EndDate\": \"{{Variables.today}}\"\r\n    }\r\n}"
+          }
+        },
+        {
+          "$id": "11",
+          "name": "ContentType",
+          "expressions": {
+            "$id": "12",
+            "Literal": "application/json"
+          }
+        },
+        {
+          "$id": "13",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "14",
+            "Literal": "true"
+          }
+        },
+        {
+          "$id": "15",
+          "name": "ResponseContentParserName",
+          "expressions": {
+            "$id": "16",
+            "Literal": "File"
+          }
+        },
+        {
+          "$id": "17",
+          "name": "ResponseContentTargetType",
+          "expressions": {
+            "$id": "18"
+          }
+        },
+        {
+          "$id": "19",
+          "name": "SupportedStatusCodes",
+          "expressions": {
+            "$id": "20"
+          }
+        },
+        {
+          "$id": "21",
+          "name": "Authorization",
+          "expressions": {
+            "$id": "22"
+          }
+        },
+        {
+          "$id": "23",
+          "name": "RequestHeaders",
+          "expressions": {
+            "$id": "24"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "25",
+      "activityId": "df3aaf6c-cb91-4903-891a-25c44637fe81",
+      "type": "SetVariable",
+      "displayName": "Set today as variable",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "26",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "27",
+            "Literal": "today"
+          }
+        },
+        {
+          "$id": "28",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "29",
+            "JavaScript": "formatInstant(currentInstant(), 'yyyy-MM-dd')"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "30",
+      "activityId": "39270c8f-ae71-4965-aad3-578516a59796",
+      "type": "SetVariable",
+      "displayName": "Set last7Days as Variable",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "31",
+          "name": "VariableName",
+          "expressions": {
+            "$id": "32",
+            "Literal": "last7Days"
+          }
+        },
+        {
+          "$id": "33",
+          "name": "Value",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "34",
+            "JavaScript": "formatInstant(subtractDurationFrom(currentInstant(), durationFromDays(7)), 'yyyy-MM-dd')"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "35",
+      "activityId": "f4521aef-e059-4198-a7d6-1d37fb484034",
+      "type": "WriteLine",
+      "displayName": "Write Line",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "36",
+          "name": "Text",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "37",
+            "JavaScript": "activities.TopPcPayReportRequest.ResponseContent()"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    },
+    {
+      "$id": "38",
+      "activityId": "7d1bd04c-32d6-48b1-8f6c-65b1bbcc373a",
+      "type": "SendEmail",
+      "displayName": "Send Email",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "39",
+          "name": "From",
+          "expressions": {
+            "$id": "40",
+            "Literal": "rsantos@braziliandevs.com"
+          }
+        },
+        {
+          "$id": "41",
+          "name": "To",
+          "expressions": {
+            "$id": "42",
+            "Json": "[\"p.4ever@gmail.com\"]"
+          }
+        },
+        {
+          "$id": "43",
+          "name": "Subject",
+          "expressions": {
+            "$id": "44",
+            "Literal": "Top PcPay facilities report"
+          }
+        },
+        {
+          "$id": "45",
+          "name": "Attachments",
+          "syntax": "JavaScript",
+          "expressions": {
+            "$id": "46",
+            "JavaScript": "const fileName = 'TopPcPayFacilities.xlsx';\r\nconst fileStream = activities.TopPcPayReportRequest.ResponseContent();\r\nconst contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';\r\n\r\nconst attachment = new EmailAttachment(fileStream, fileName, contentType);\r\nreturn attachment;"
+          }
+        },
+        {
+          "$id": "47",
+          "name": "Body",
+          "expressions": {
+            "$id": "48",
+            "Literal": "Please find the requested report attached"
+          }
+        },
+        {
+          "$id": "49",
+          "name": "Cc",
+          "expressions": {
+            "$id": "50"
+          }
+        },
+        {
+          "$id": "51",
+          "name": "Bcc",
+          "expressions": {
+            "$id": "52"
+          }
+        }
+      ],
+      "propertyStorageProviders": {}
+    }
+  ],
+  "connections": [
+    {
+      "$id": "53",
+      "sourceActivityId": "df3aaf6c-cb91-4903-891a-25c44637fe81",
+      "targetActivityId": "39270c8f-ae71-4965-aad3-578516a59796",
+      "outcome": "Done"
+    },
+    {
+      "$id": "54",
+      "sourceActivityId": "39270c8f-ae71-4965-aad3-578516a59796",
+      "targetActivityId": "bd5ea226-ea12-419c-bfa9-d5ea6cbb419d",
+      "outcome": "Done"
+    },
+    {
+      "$id": "55",
+      "sourceActivityId": "bd5ea226-ea12-419c-bfa9-d5ea6cbb419d",
+      "targetActivityId": "f4521aef-e059-4198-a7d6-1d37fb484034",
+      "outcome": "Unsupported Status Code"
+    },
+    {
+      "$id": "56",
+      "sourceActivityId": "bd5ea226-ea12-419c-bfa9-d5ea6cbb419d",
+      "targetActivityId": "7d1bd04c-32d6-48b1-8f6c-65b1bbcc373a",
+      "outcome": "Done"
+    }
+  ],
+  "id": "abfddc9c3dfa4e15b8a468c185925939"
+}
